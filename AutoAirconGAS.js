@@ -76,7 +76,7 @@ function decideAirConOn() {
 
 function deploy() {
 
-  SpreadsheetApp.getActiveSheet().mySheet.getActiveCell().getColumn();
+  console.log(SpreadsheetApp.getActiveSheet().getActiveCell().getColumn());
   
   console.log(UrlFetchApp.fetch('https://maker.ifttt.com/trigger/deploy/with/key/YOUR_IFTTT_USER_KEY'));
 }
