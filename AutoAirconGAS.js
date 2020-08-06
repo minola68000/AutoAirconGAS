@@ -1,19 +1,21 @@
+// トリガーセッテによって、いずれかのセルが編集された段階でコールされる
 function decideAirConOn() {
 
-  var CELL_SHOULD_CONTROLL_AIR_CON = 'A2';
-
-  var CELL_IS_ON_REQUEST           = 'B2';
+  var CELL_SHOULD_CONTROL_AIR_CON  = 'A2';
+  var CELL_LAST_SHOULD_CONTROL     = 'A3';
+  
+  var CELL_ON_REQUEST              = 'B2';
   var CELL_LAST_ON_REQUEST         = 'B3';
   var CELL_ON_COMMAND              = 'C2';
 
-  var CELL_IS_OFF_REQUEST          = 'D2';
+  var CELL_OFF_REQUEST             = 'D2';
   var CELL_LAST_OFF_REQUES         = 'D3';
   var CELL_OFF_COMMAND             = 'E2';
 
-  var CELL_IS_DRY_REQUEST          = 'F2';
+  var CELL_DRY_REQUEST             = 'F2';
   var CELL_LAST_DRY_REQUES         = 'F3';
   var CELL_DRY_COMMAND             = 'G2';
-
+  
   var ON  = '1';
   var OFF = '0';
 
@@ -34,51 +36,64 @@ function decideAirConOn() {
   }
   console.log('Start decision');
 
-  var g_shouldControllAirCon = getVal(CELL_SHOULD_CONTROLL_AIR_CON);
-  var g_isOnRequest          = getVal(CELL_IS_ON_REQUEST);
-  var g_isOffRequest         = getVal(CELL_IS_OFF_REQUEST);
-  var g_isDryRequest         = getVal(CELL_IS_DRY_REQUEST);
-  console.log('isOnRequest:' + isOnRequest);
-  console.log('isOffRequest:' + isOffRequest);
+  var g_shouldControlAirCon  = getVal(CELL_SHOULD_CONTROL_AIR_CON);
+  var g_isOnRequest          = getVal(CELL_ON_REQUEST);
+  var g_isOffRequest         = getVal(CELL_OFF_REQUEST);
+  var g_isDryRequest         = getVal(CELL_DRY_REQUEST);
+  console.log('isOnRequest:'    + g_isOnRequest);
+  console.log('isOffRequest:'   + g_isOffRequest);
+  console.log('g_isDryRequest:' + g_isDryRequest);
 
   // 自動運転中フラグが立っているときだけエアコンオン
-    
+  //////////////////////////////////////////////////////////////////////    
   if (isOnRequest()) {
     console.log('Set command on');
-    if (g_shouldControllAirCon == ON) {
+    if (g_shouldControlAirCon == ON) {
       if (USE_FETCH) UrlFetchApp.fetch(URL_AIRCON_ON);
       if (USE_CELL) setVal(CELL_ON_COMMAND, new Date());
       g_isOnRequest = '[Executed]' + g_isOnRequest;
+      setVal(CELL_ON_REQUEST, OFF);
     }
     setVal(CELL_LAST_ON_REQUEST, g_isOnRequest + ' ' + new Date());
-    setVal(CELL_IS_ON_REQUEST, OFF);
-    setVal(CELL_IS_DRY_REQUEST, OFF);
+    // 他のコマンドは初期化
+    setVal(CELL_DRY_REQUEST, OFF);
+    setVal(CELL_OFF_REQUEST, OFF);
   }
   
   // 自動運転中フラグが立っているときだけエアコンオフ
+  //////////////////////////////////////////////////////////////////////
   if (isOffRequest()) {
     console.log('Set command off');
-    if (g_shouldControllAirCon == ON) {
+    if (g_shouldControlAirCon == ON) {
       if (USE_FETCH) UrlFetchApp.fetch(URL_AIRCON_OFF);
       if (USE_CELL) setVal(CELL_OFF_COMMAND, new Date());
       g_isOffRequest = '[Executed]' + g_isOffRequest;
+      setVal(CELL_OFF_REQUEST, OFF);
     }
     setVal(CELL_LAST_OFF_REQUES, g_isOffRequest + ' ' + new Date());
-    setVal(CELL_IS_OFF_REQUEST, OFF);
-    setVal(CELL_IS_DRY_REQUEST, OFF);
+    // 他のコマンドは初期化
+    setVal(CELL_DRY_REQUEST, OFF);
+    setVal(CELL_ON_REQUEST, OFF);
   }
   
-  // ドライ制御はオンだけ
+  // ドライ制御
+  //////////////////////////////////////////////////////////////////////
   if (isDryRequest()) {
     console.log('Set command dry');
-    if (g_shouldControllAirCon == ON) {
+    if (g_shouldControlAirCon == ON) {
       if (USE_FETCH) UrlFetchApp.fetch(URL_AIRCON_DRY);
       if (USE_CELL) setVal(CELL_DRY_COMMAND, new Date());
       g_isDryRequest = '[Executed]' + g_isDryRequest;
+      setVal(CELL_DRY_REQUEST, OFF);
     }
     setVal(CELL_LAST_DRY_REQUES, g_isDryRequest + ' ' + new Date());
-    setVal(CELL_IS_DRY_REQUEST, OFF);
+    // 他のコマンドは初期化
+    setVal(CELL_ON_REQUEST, OFF);
+    setVal(CELL_OFF_REQUEST, OFF);
   }
+  
+  // 自動運転中フラグを待避
+  setVal(CELL_LAST_SHOULD_CONTROL, g_shouldControlAirCon);
   
   function isOnRequest() {
     return (g_isOnRequest != OFF);
