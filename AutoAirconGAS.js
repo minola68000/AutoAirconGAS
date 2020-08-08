@@ -1,5 +1,3 @@
-
-// トリガーセッテによって、いずれかのセルが編集された段階でコールされる
 var CELL_SHOULD_CONTROL_AIR_CON  = 'A2';
 var CELL_LAST_SHOULD_CONTROL     = 'A3';
 
@@ -32,12 +30,13 @@ var USE_NOTIFICATION = true;
 var USE_STOPPER = false;
 var IS_DEBUG = false;
 
+// This method will be called when any cell is changed(by ifttt)
 function decideAirConOn() {
 
   var mySheet = SpreadsheetApp.getActiveSheet();
   var myCell = mySheet.getActiveCell();
 
-  // 監視対象のセルがアップデートされた場合だけ反応する
+  // Only execute if specified cell is changed(by ifttt)
   if ( ! IS_DEBUG) {
     if (7 < myCell.getColumn() || myCell.getRow() != 2) return;
   }
@@ -51,14 +50,14 @@ function decideAirConOn() {
   Logger.log('isOffRequest:'   + g_isOffRequest);
   Logger.log('g_isDryRequest:' + g_isDryRequest);
 
-  // 自動運転中フラグが立っているときだけエアコンオン
+  // AirCon ON command
   //////////////////////////////////////////////////////////////////////    
   if (isOnRequest()) {
     Logger.log('Set command on');
     if (g_shouldControlAirCon == ON) {
       if (USE_FETCH)        UrlFetchApp.fetch(URL_AIRCON_ON);
       if (USE_CELL)         setVal(CELL_ON_COMMAND, new Date());
-      if (USE_NOTIFICATION) sendNotification('クーラーオン！');
+      if (USE_NOTIFICATION) sendNotification('AirCon ON!');
       g_isOnRequest = '[Executed]' + g_isOnRequest;
       setVal(CELL_ON_REQUEST, OFF);
       
@@ -71,21 +70,21 @@ function decideAirConOn() {
     }
     
     setVal(CELL_LAST_ON_REQUEST, g_isOnRequest + ' ' + new Date());
-    // 他のコマンドは初期化
+    // Other commands set must be cleared if set
     setVal(CELL_DRY_REQUEST, OFF);
     setVal(CELL_OFF_REQUEST, OFF);
    
   }
 
   
-  // 自動運転中フラグが立っているときだけエアコンオフ
+  // AirCon OFF command
   //////////////////////////////////////////////////////////////////////
   if (isOffRequest()) {
     Logger.log('Set command off');
     if (g_shouldControlAirCon == ON) {
       if (USE_FETCH)        UrlFetchApp.fetch(URL_AIRCON_OFF);
       if (USE_CELL)         setVal(CELL_OFF_COMMAND, new Date());
-      if (USE_NOTIFICATION) sendNotification('クーラーオフ！');
+      if (USE_NOTIFICATION) sendNotification('AirCon OFF!');
       g_isOffRequest = '[Executed]' + g_isOffRequest;
       setVal(CELL_OFF_REQUEST, OFF);
 
@@ -98,24 +97,24 @@ function decideAirConOn() {
     }
     
     setVal(CELL_LAST_OFF_REQUES, g_isOffRequest + ' ' + new Date());
-    // 他のコマンドは初期化
+    // Other commands set must be cleared if set
     setVal(CELL_DRY_REQUEST, OFF);
     setVal(CELL_ON_REQUEST, OFF);
   }
   
-  // ドライ制御
+  // AirCon DRY command
   //////////////////////////////////////////////////////////////////////
   if (isDryRequest()) {
     Logger.log('Set command dry');
     if (g_shouldControlAirCon == ON) {
       if (USE_FETCH)        UrlFetchApp.fetch(URL_AIRCON_DRY);
       if (USE_CELL)         setVal(CELL_DRY_COMMAND, new Date());
-      if (USE_NOTIFICATION) sendNotification('ドライチェンジ！');
+      if (USE_NOTIFICATION) sendNotification('AirCon DRY!');
       g_isDryRequest = '[Executed]' + g_isDryRequest;
       setVal(CELL_DRY_REQUEST, OFF);
     }
     setVal(CELL_LAST_DRY_REQUES, g_isDryRequest + ' ' + new Date());
-    // 他のコマンドは初期化
+    // Other commands set must be cleared if set
     setVal(CELL_ON_REQUEST, OFF);
     setVal(CELL_OFF_REQUEST, OFF);
   }
@@ -146,7 +145,7 @@ function decideAirConOn() {
     }
   }
   
-  // 自動運転中フラグを待避
+  // Record automatic drive flag
   setVal(CELL_LAST_SHOULD_CONTROL, g_shouldControlAirCon);
   
   function isOnRequest() {
