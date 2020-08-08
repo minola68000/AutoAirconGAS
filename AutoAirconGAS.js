@@ -17,9 +17,11 @@ var CELL_DRY_REQUEST             = 'F2';
 var CELL_LAST_DRY_REQUES         = 'F3';
 var CELL_DRY_COMMAND             = 'G2';
 
-  var URL_AIRCON_ON  = 'https://maker.ifttt.com/trigger/startAirCon/with/key/YOUR_IFTTT_USER_KEY';
-  var URL_AIRCON_OFF = 'https://maker.ifttt.com/trigger/stopAirCon/with/key/YOUR_IFTTT_USER_KEY';
-  var URL_AIRCON_DRY = 'https://maker.ifttt.com/trigger/dryAirCon/with/key/YOUR_IFTTT_USER_KEY';
+var URL_AIRCON_ON  = 'https://maker.ifttt.com/trigger/startAirCon/with/key/YOUR_IFTTT_USER_KEY';
+var URL_AIRCON_OFF = 'https://maker.ifttt.com/trigger/stopAirCon/with/key/YOUR_IFTTT_USER_KEY';
+var URL_AIRCON_DRY = 'https://maker.ifttt.com/trigger/dryAirCon/with/key/YOUR_IFTTT_USER_KEY';
+var URL_NOTIFY =     'https://maker.ifttt.com/trigger/SendNotification/with/key/YOUR_IFTTT_USER_KEY';
+
 var ON  = '1';
 var OFF = '0';
 
