@@ -15,20 +15,20 @@ var CELL_DRY_REQUEST             = 'F2';
 var CELL_LAST_DRY_REQUES         = 'F3';
 var CELL_DRY_COMMAND             = 'G2';
 
-var URL_AIRCON_ON  = 'https://maker.ifttt.com/trigger/startAirCon/with/key/YOUR_IFTTT_USER_KEY';
-var URL_AIRCON_OFF = 'https://maker.ifttt.com/trigger/stopAirCon/with/key/YOUR_IFTTT_USER_KEY';
-var URL_AIRCON_DRY = 'https://maker.ifttt.com/trigger/dryAirCon/with/key/YOUR_IFTTT_USER_KEY';
-var URL_NOTIFY =     'https://maker.ifttt.com/trigger/SendNotification/with/key/YOUR_IFTTT_USER_KEY';
+var URL_AIRCON_ON                = 'https://maker.ifttt.com/trigger/startAirCon/with/key/YOUR_IFTTT_USER_KEY';
+var URL_AIRCON_OFF               = 'https://maker.ifttt.com/trigger/stopAirCon/with/key/YOUR_IFTTT_USER_KEY';
+var URL_AIRCON_DRY               = 'https://maker.ifttt.com/trigger/dryAirCon/with/key/YOUR_IFTTT_USER_KEY';
+var URL_NOTIFY                   = 'https://maker.ifttt.com/trigger/SendNotification/with/key/YOUR_IFTTT_USER_KEY';
 
-var ON  = '1';
-var OFF = '0';
+var ON                           = '1';
+var OFF                          = '0';
 
 
-var USE_FETCH = true;
-var USE_CELL = ! USE_FETCH;
+var USE_FETCH        = true;
+var USE_CELL         = ! USE_FETCH;
 var USE_NOTIFICATION = true;
-var USE_STOPPER = false;
-var IS_DEBUG = false;
+var USE_STOPPER      = false;
+var IS_DEBUG         = false;
 
 // This method will be called when any cell is changed(by ifttt)
 function decideAirConOn() {
